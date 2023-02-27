@@ -1,17 +1,31 @@
 <ng-container *ngIf="events">
-        <mat-label>Select Event</mat-label> 
-        <mat-form-field>
-            <mat-select [(value)]="selectedEvent" (selectionChange)="getEventProperties($event)">
-                <mat-option *ngFor="let event of events" [value]="event.type">{{ event.type }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-        <mat-label>Select Properties</mat-label> 
-        <mat-form-field>
-            <mat-select (selectionChange)="getEventProperty($event)">
-                <mat-option *ngFor="let props of selectedEventProperties" [value]="props">{{ props.property }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-        <ng-container *ngIf="step.properties?.length">
-            <app-operators (operatorChange)="onOperatorChange($event)"></app-operators>
-        </ng-container>
+    <mat-card-header>
+        <mat-card-title>Step {{stepIndex + 1 }}</mat-card-title>
+    </mat-card-header>
+    <mat-label>Select Event</mat-label>
+    <mat-form-field>
+        <mat-select [(value)]="selectedEvent" (selectionChange)="onEventChange($event)">
+            <mat-option *ngFor="let event of events" [value]="event.type">{{
+                event.type
+                }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <ng-container *ngFor="let x of step.properties, let i = index"> <!-- TODO: change 'x'-->
+        <div>
+            <ng-container *ngIf="selectedEvent">
+                <mat-label>Select Properties</mat-label>
+                <mat-form-field>
+                    <mat-select (selectionChange)="onPropertyChange($event, i)">
+                        <mat-option *ngFor="let props of selectedEventProperties" [value]="props">{{ props.property
+                            }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <app-operators (operatorChange)="onOperatorChange($event, i)"></app-operators>
+                <button (click)="addNewAttribute()">Refine</button>
+            </ng-container>
+            {{x | json }}
+        </div>
+        
+    </ng-container>
+    <button (click)="stepDelete()">Delete Step</button>
 </ng-container>

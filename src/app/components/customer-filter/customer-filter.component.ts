@@ -1,31 +1,64 @@
 import { Component, OnInit } from '@angular/core';
 import { FilterDataService } from 'src/app/services/filter-data.service';
-import { EventOperator, EventProperties, FilterStep } from '../filter.model';
+import { Filter, EventProperty, EventsResponseProps, FilterStep } from '../filter.model';
 
 @Component({
   selector: 'app-customer-filter',
   templateUrl: './customer-filter.component.html',
   styleUrls: ['./customer-filter.component.scss'],
-  providers: [FilterDataService],
+  providers: [ FilterDataService ],
 })
 export class CustomerFilterComponent implements OnInit {
-  events: EventProperties[] = [];
-  steps: FilterStep[] = [];
+  events: EventsResponseProps[] = [];
+  filter: Filter;
+  stepIndex!: number;
 
-  constructor(private filtersService: FilterDataService) {}
+  constructor(private filtersService: FilterDataService) {
+    this.filter = new Filter()
+  }
 
   ngOnInit(): void {
     this.fetchData();
-    this.steps.push(new FilterStep());
   }
 
-  onOperatorChange(event: EventOperator) {
-    console.log('parent: ', event);
+  onPropertyChange(data: any) {
+    const newPropertyData = data[0];
+    const indexOfProperty = data[1];
+    console.log(newPropertyData, indexOfProperty);
+    console.log(this.filter.filterSteps[this.stepIndex]);
+    this.filter.filterSteps[this.stepIndex].properties[indexOfProperty] = newPropertyData[indexOfProperty]
+    // TODO: change from ANY
+  }
+
+  onEventNameChange(eventName: string) {
+    this.filter.filterSteps.at(this.stepIndex)!.event = eventName;
+  }
+  
+  addNewStep() {
+    const step = this.filter.filterSteps;
+    step.push(new FilterStep())
+  }
+
+  addNewAttribute() {
+    const properties = this.filter.filterSteps.at(this.stepIndex)!.properties;
+    properties.push(new EventProperty());
+  }
+
+
+  deleteStepAtIndex(index: number) {
+    this.filter.filterSteps.splice(index, 1)
+  }
+
+  applyFilter() {
+    console.log(this.filter)
+  }
+
+  currentStepIndex(event: number) {
+    this.stepIndex = event;
   }
 
   fetchData(): void {
     this.filtersService.getData().subscribe(data => {
-      console.log(data.events);
       this.events = data?.events || [];
     });
   }

@@ -1,38 +1,82 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
-import { EventOperator, EventProperty, FilterStep, EventsResponse, EventProperties } from '../filter.model';
+import {
+  EventOperator,
+  EventProperty,
+  FilterStep,
+  EventsResponseProps,
+} from '../filter.model';
 
 @Component({
   selector: 'app-single-step',
   templateUrl: './single-step.component.html',
-  styleUrls: ['./single-step.component.scss']
+  styleUrls: ['./single-step.component.scss'],
 })
-
 export class SingleStepComponent {
-  @Input() events: any // EventsResponse
-  @Input() step!: FilterStep; // FilterStep
+  @Input() events: EventsResponseProps[] = [];
+  @Input() step!: FilterStep;
+  @Input() stepIndex!: number;
 
-  @Output() test = new EventEmitter<EventOperator>();
+  @Output() eventPropertiesOutput = new EventEmitter<[any, any]>();
+  @Output() eventNameOutput = new EventEmitter<string>();
+  @Output() stepIndexOutput = new EventEmitter<number>();
+  @Output() removeCurrentStep = new EventEmitter<any>(); // TODO: change from any
+  @Output() addEventAttribute = new EventEmitter<any>(); // TODO: change from any
 
-  operator?: EventOperator;
-  
+  eventProperties: EventProperty[] =[new EventProperty()];
+  eventProps: FilterStep[] = [new FilterStep()];
+
   selectedEvent: string = '';
-  selectedEventProperties: EventProperties[] = [];// Array<string> ; string[]  ; Array<{}>
+  selectedEventProperties: EventProperty[] = [];
 
-  onOperatorChange(operatorData: EventOperator) { 
-    console.log(this.events);
-    this.operator = operatorData;
-    this.test.emit(this.operator)
+  onEventChange(event: MatSelectChange) {
+    this.stepIndexOutput.emit(this.stepIndex);
+    this.eventNameOutput.emit(this.selectedEvent);
+    this.getEventProperties(event);
+  }
+
+  onPropertyChange(event: MatSelectChange, index: number) {
+    this.stepIndexOutput.emit(this.stepIndex);
+    const propertyValue = event.value.property;
+    const typeValue = event.value.type;
+
+    this.eventProperties[index] = {
+      ...this.eventProperties[index],
+      property: propertyValue,
+      type: typeValue,
+    }
+
+    this.eventPropertiesOutput.emit([this.eventProperties, index])
+    // this.eventPropertiesOutput.emit(this.eventProperties);
+  }
+
+  onOperatorChange(operatorData: EventOperator, index: number) {
+    this.stepIndexOutput.emit(this.stepIndex);
+
+    this.eventProps[0].properties[index] = {
+      ...this.eventProps[0].properties[index],
+      operator: operatorData
+    };
+    // this.eventProperties = { ...this.eventProperties, operator: operatorData };
+
+    // this.eventPropertiesOutput.emit(this.eventProperties);
+  }
+
+  addNewAttribute() {
+    this.addEventAttribute.emit();
+    // this.step.properties = [...this.step.properties, new EventProperty()];
   }
 
   getEventProperties(event: MatSelectChange) {
-    const getEventProperties = this.events.filter((option: any) => option.type === event.value);
-    this.selectedEventProperties  = getEventProperties[0].properties;
-    this.step.event = this.selectedEvent;
+    const filterEventProperties = this.events.filter(
+      (option: any) => option.type === event.value
+    );
+    this.selectedEventProperties = filterEventProperties[0].properties;
+    console.log('selected e: ', this.selectedEventProperties);
+    // TODO: find a better way how to approach this
   }
 
-  getEventProperty(event: MatSelectChange) {
-    this.step.properties = [{...event.value}]
+  stepDelete() {
+    this.removeCurrentStep.emit(this.stepIndex);
   }
-
 }

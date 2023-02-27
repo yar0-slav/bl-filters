@@ -12,9 +12,5 @@ export class FilterDataService {
   getData() {
     return this.http.get<EventsResponse>(this.ROOT_URL)
   }
-
-
-  // getData() Observable<Events[]> {
-  //   return this.http.get<Events>(this.ROOT_URL)
-  // }
+  
 }

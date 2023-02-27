@@ -6,12 +6,12 @@
         *ngFor="let operator of operators; let i = index"
         [label]="operator.type"
       >
-        <!-- <mat-option style="display: none;" (value)="operator.type">{{ operator.type }}</mat-option> -->
         <mat-option
           *ngFor="let operatorName of operator.values"
           [value]="{operatorName, operator}"
-          >{{ operatorName }}</mat-option
-        >
+          >
+          {{ operatorName }}
+        </mat-option>
       </mat-tab>
     </mat-tab-group>
   </mat-select>
@@ -19,5 +19,13 @@
 
 <mat-form-field appearance="fill">
   <mat-label>Input</mat-label>
-  <input type="text" (change)="onInputChange($event)" matInput />
+  <input type="text" (change)="onInputChange($event, 'value_one')" matInput />
 </mat-form-field>
+
+<ng-container *ngIf="currentOperator == 'in between'">
+  <mat-form-field appearance="fill">
+    <mat-label>Input</mat-label>
+    <input type="text" (change)="onInputChange($event, 'value_two')"  matInput />
+  </mat-form-field>
+</ng-container>
+  

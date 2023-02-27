@@ -1,49 +1,60 @@
-export class FilterStep {
-    event: string;
-    name: string;
-    properties: EventProperty[];
-
-    constructor(event: string = '', name: string = '', properties: EventProperty[] = []) {
-        this.event = event;
-        this.name = name;
-        this.properties = properties;
+    export interface EventsResponse {
+        events: EventsResponseProps[];
     }
-}
 
-export class EventProperty {
-    property: string;
-    type: string;
-    operator: EventOperator[];
-
-    constructor(property: string = '', type: string, operator: EventOperator[] = []) {
-        this.property = property;
-        this.type = type;
-        this.operator = operator;
+    export interface EventsResponseProps {
+        properties: EventProperty[]; 
+        type: string;
     }
-}
 
-export class EventOperator {
-    operator?: string;
-    type?: string;
-    value_one?: PropertyValue;
-    value_two?: PropertyValue;
+    export class Filter {
+        filterSteps: FilterStep[];
 
-    constructor(operator: string = '', type: string = '', value_one: PropertyValue = '', value_two: PropertyValue = '') {
-        this.operator = operator;
-        this.type = type;
-        this.value_one = value_one;
-        this.value_two = value_two;    
+        constructor(filterSteps: FilterStep[] = []) {
+            this.filterSteps = filterSteps;
+        }
     }
-}
+
+    export class FilterStep {
+        event: string;
+        properties: EventProperty[];
+
+        constructor(event: string = '', properties: EventProperty[] = [new EventProperty()]) {
+            this.event = event;
+            this.properties = properties;
+        }
+    }
+
+    export class EventProperty {
+        property?: string;
+        type?: string;
+        operator?: EventOperator;
+
+        constructor(property: string = '', type: string = '',  operator: EventOperator = new EventOperator()) {
+            this.property = property;
+            this.type = type;
+            this.operator = operator;
+        }
+    }
+
+    export class EventOperator {
+        name?: string;
+        type?: string;
+        value_one?: PropertyValue;
+        value_two?: PropertyValue;
+
+        constructor(name: string = '', type: string = '', value_one: PropertyValue = '', value_two: PropertyValue = '') {
+            this.name = name;
+            this.type = type;
+            this.value_one = value_one;
+            this.value_two = value_two;    
+        }
+    }
+
+    export interface Operator {
+        value_one: string;
+        value_two: string;
+    }
 
 
-export interface EventsResponse {
-    events: EventProperty[];
-}
-
-export interface EventProperties {
-    properties: string; 
-    type: string;
-}
-
-export type PropertyValue = string | number | undefined;
+    export type PropertyValue = string | number | undefined;
