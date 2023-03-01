@@ -42,7 +42,7 @@ export class SingleStepComponent {
 
     this.eventProperties[index] = {
       ...this.eventProperties[index],
-      property: propertyValue,
+      property: propertyValue,cccccbdgdtnc
       type: typeValue,
     }
 
