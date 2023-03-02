@@ -5,27 +5,25 @@
     <mat-label>Select Event</mat-label>
     <mat-form-field>
         <mat-select [(value)]="selectedEvent" (selectionChange)="onEventChange($event)">
-            <mat-option *ngFor="let event of events" [value]="event.type">{{
-                event.type
-                }}</mat-option>
+            <mat-option *ngFor="let event of events" [value]="event.type">
+                {{ event.type }}
+            </mat-option>
         </mat-select>
     </mat-form-field>
-    <ng-container *ngFor="let x of step.properties, let i = index"> <!-- TODO: change 'x'-->
-        <div>
-            <ng-container *ngIf="selectedEvent">
+    <ng-container *ngFor="let properties of step.properties, let i = index">
+        <div *ngIf="selectedEvent">
+            <mat-form-field>
                 <mat-label>Select Properties</mat-label>
-                <mat-form-field>
-                    <mat-select (selectionChange)="onPropertyChange($event, i)">
-                        <mat-option *ngFor="let props of selectedEventProperties" [value]="props">{{ props.property
-                            }}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <app-operators (operatorChange)="onOperatorChange($event, i)"></app-operators>
-                <button (click)="addNewAttribute()">Refine</button>
-            </ng-container>
-            {{x | json }}
+                <mat-select [(value)]="selectedProperties[i]" (selectionChange)="onPropertyChange($event, i)">
+                    <mat-option *ngFor="let property of arrayOfEventProperties" [value]="property">
+                        {{ property.property }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <app-operators [currentStepIndex]="i" [step]="step" (operatorChange)="onOperatorChange($event, i)
+                "></app-operators>
+            <button (click)="addNewAttribute()">Refine</button>
         </div>
-        
     </ng-container>
     <button (click)="stepDelete()">Delete Step</button>
 </ng-container>

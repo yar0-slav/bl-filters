@@ -22,11 +22,9 @@ export class CustomerFilterComponent implements OnInit {
   }
 
   onPropertyChange(data: any) {
-    const newPropertyData = data[0];
+    const updatedProperty = data[0];
     const indexOfProperty = data[1];
-    console.log(newPropertyData, indexOfProperty);
-    console.log(this.filter.filterSteps[this.stepIndex]);
-    this.filter.filterSteps[this.stepIndex].properties[indexOfProperty] = newPropertyData[indexOfProperty]
+    this.filter.filterSteps[this.stepIndex].properties[indexOfProperty] = updatedProperty[indexOfProperty]
     // TODO: change from ANY
   }
 
@@ -42,6 +40,7 @@ export class CustomerFilterComponent implements OnInit {
   addNewAttribute() {
     const properties = this.filter.filterSteps.at(this.stepIndex)!.properties;
     properties.push(new EventProperty());
+    console.log(properties);
   }
 
 

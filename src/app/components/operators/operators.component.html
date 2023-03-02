@@ -1,6 +1,6 @@
 <mat-form-field appearance="fill">
   <mat-label>Select Operator</mat-label>
-  <mat-select (selectionChange)="onOperatorChange($event)">
+  <mat-select [(value)]="currentOperator" (selectionChange)="onOperatorChange($event)">
     <mat-tab-group animationDuration="0ms">
       <mat-tab
         *ngFor="let operator of operators; let i = index"
@@ -22,10 +22,10 @@
   <input type="text" (change)="onInputChange($event, 'value_one')" matInput />
 </mat-form-field>
 
-<ng-container *ngIf="currentOperator == 'in between'">
+<!-- <ng-container *ngIf="currentOperator == 'in between'">
   <mat-form-field appearance="fill">
     <mat-label>Input</mat-label>
     <input type="text" (change)="onInputChange($event, 'value_two')"  matInput />
   </mat-form-field>
 </ng-container>
-  
+   -->
