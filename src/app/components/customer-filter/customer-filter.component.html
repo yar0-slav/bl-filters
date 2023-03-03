@@ -1,24 +1,39 @@
 <div class="customer-filter">
 	<mat-card>
-		<mat-card-header>
-			<mat-card-title>Filters</mat-card-title>
-		</mat-card-header>
-		<app-single-step
-			*ngFor="let step of filter.filterSteps; let i = index; trackBy: trackByIndex"
-			[events]="events"
-			[filterStep]="step"
-			[stepIndex]="i"
-			(removeCurrentStep)="deleteStepAtIndex($event)"
-			(filterStepOutput)="onStepChange($event, i)"></app-single-step>
-		<button (click)="addNewStep()">Add New Step</button>
-		<button (click)="applyFilter()">Filter</button>
+		<mat-card-content>
+			<mat-card-header>
+				<mat-card-title>Filters</mat-card-title>
+			</mat-card-header>
+			<app-single-step
+				*ngFor="
+					let step of filter.filterSteps;
+					let i = index;
+					trackBy: trackByIndex
+				"
+				[filterStep]="step"
+				[stepIndex]="i"
+				[events]="events"
+				(removeCurrentStep)="deleteStepAtIndex($event)"
+				(filterStepOutput)="onStepChange($event, i)"
+				(filterStepClone)="onStepClone(i)"></app-single-step>
+			<mat-card-actions>
+				<button mat-raised-button color="primary" (click)="addNewStep()">
+					Add New Step
+				</button>
+			</mat-card-actions>
+		</mat-card-content>
+		<button mat-stroked-button color="primary" (click)="applyFilter()">
+			Filter
+		</button>
 	</mat-card>
-
 	<br />
 	<mat-card>
+		<mat-card-content>
 		<mat-card-title>Console log:</mat-card-title>
-		<pre>
-      {{ filter | json }}
-    </pre>
+			<pre>
+					{{ filter | json }}
+				</pre
+			>
+		</mat-card-content>
 	</mat-card>
 </div>

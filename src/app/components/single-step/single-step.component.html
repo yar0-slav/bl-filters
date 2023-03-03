@@ -1,44 +1,58 @@
 <ng-container *ngIf="events">
 	<mat-card-header>
 		<mat-card-title>Step {{ stepIndex + 1 }}</mat-card-title>
+		<button mat-button (click)="stepClone(stepIndex)">Clone Step</button>
+		<button mat-button color="warn" (click)="stepDelete()">Delete Step</button>
 	</mat-card-header>
 
-	<mat-label>Select Event</mat-label>
-	<mat-form-field>
-		<mat-select
-			[value]="filterStep.event"
-			(selectionChange)="onEventChange($event)">
-			<mat-option *ngFor="let event of events" [value]="event.type">
-				{{ event.type }}
-			</mat-option>
-		</mat-select>
-	</mat-form-field>
-
-	<ng-container *ngFor="let propertyObject of filterStep.properties; let i = index">
-		<div *ngIf="filterStep.event">
-			<mat-form-field>
-				<mat-label>Select Properties</mat-label>
-				<mat-select
-					[value]="propertyObject"
-					(selectionChange)="onPropertyChange($event, i)"
-					[compareWith]="propertyObjectComparison">
-					<mat-option
-						*ngFor="let properties of arrayOfEventProperties"
-						[value]="properties">
-						{{ properties.property }}
-					</mat-option>
-				</mat-select>
-			</mat-form-field>
-			<app-operators
-				[currentStepIndex]="i"
-				[properties]="propertyObject"
-				[filterStep]="filterStep"
-				(filterStepOutput)="onOperatorChange($event)">
-            </app-operators>
-			<button (click)="addNewAttribute()">Refine</button>
-			<button *ngIf="filterStep.properties.length > 1	" (click)="removeCurrentAttribute(i)">Remove</button>
-		</div>
-	</ng-container>
-	<button *ngIf="filterStep.properties.length == 0" (click)="addNewAttribute()">Add Attribute</button>
-	<button (click)="stepDelete()">Delete Step</button>
+	<mat-card-content>
+		<mat-form-field>
+			<mat-label>Select Event</mat-label>
+			<mat-select
+				[value]="filterStep.event"
+				(selectionChange)="onEventChange($event)">
+				<mat-option *ngFor="let event of events" [value]="event.type">
+					{{ event.type }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+		<ng-container
+		*ngFor="let propertyObject of filterStep.properties; let i = index">
+		<ng-container *ngIf="filterStep.event">
+				<mat-card-content>
+				<mat-form-field>
+					<mat-label>Select Properties</mat-label>
+					<mat-select
+						[value]="propertyObject"
+						(selectionChange)="onPropertyChange($event, i)"
+						[compareWith]="propertyObjectComparison">
+						<mat-option
+							*ngFor="let properties of arrayOfEventProperties"
+							[value]="properties">
+							{{ properties.property }}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+				<app-operators
+					[currentStepIndex]="i"
+					[properties]="propertyObject"
+					[filterStep]="filterStep"
+					(filterStepOutput)="onOperatorChange($event)"></app-operators>
+				<button
+					mat-button
+					color="warn"
+					*ngIf="filterStep.properties.length > 1"
+					(click)="removeCurrentAttribute(i)">
+					Remove
+				</button>
+			</mat-card-content>
+			</ng-container>
+		</ng-container>
+		<button
+			mat-button color="primary" 
+			*ngIf="filterStep.event"
+			(click)="addNewAttribute()">
+			Add Attribute
+		</button>
+	</mat-card-content>
 </ng-container>

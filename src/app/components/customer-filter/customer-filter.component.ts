@@ -8,7 +8,7 @@ import { Filter, EventProperty, EventsResponseProps, FilterStep } from '../filte
   styleUrls: ['./customer-filter.component.scss'],
   providers: [ FilterDataService ],
 })
-export class CustomerFilterComponent implements OnInit {
+export class CustomerFilterComponent implements OnInit{
   events: EventsResponseProps[] = [];
   filter: Filter;
   stepIndex!: number;
@@ -22,8 +22,14 @@ export class CustomerFilterComponent implements OnInit {
   }
 
   onStepChange(stepData: FilterStep, index: number) { 
-    console.log('parent stepData', stepData); 
     this.filter.filterSteps[index] = stepData; 
+  }
+
+  onStepClone(index: number) {
+    let stepIndexCppy = structuredClone(this.filter.filterSteps[index]);
+    let stepcopy =  structuredClone(this.filter.filterSteps);
+    const clonedFilter = [...stepcopy, stepIndexCppy]
+    this.filter.filterSteps = clonedFilter;
   }
   
   addNewStep() {
@@ -42,10 +48,6 @@ export class CustomerFilterComponent implements OnInit {
 
   applyFilter() {
     console.log(this.filter)
-  }
-
-  currentStepIndex(event: number) {
-    this.stepIndex = event;
   }
 
   trackByIndex(index: number) {
