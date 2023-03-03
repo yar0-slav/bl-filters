@@ -1,25 +1,25 @@
 <mat-form-field appearance="fill">
-  <mat-label>Select Operator</mat-label>
-  <mat-select [(value)]="currentOperator" (selectionChange)="onOperatorChange($event)">
-    <mat-tab-group animationDuration="0ms">
-      <mat-tab
-        *ngFor="let operator of operators; let i = index"
-        [label]="operator.type"
-      >
-        <mat-option
-          *ngFor="let operatorName of operator.values"
-          [value]="{operatorName, operator}"
-          >
-          {{ operatorName }}
-        </mat-option>
-      </mat-tab>
-    </mat-tab-group>
-  </mat-select>
+	<mat-label>Select Operator</mat-label>
+	<mat-select
+		[(value)]="currentOperator"
+		(selectionChange)="onOperatorChange($event)">
+		<mat-tab-group animationDuration="0ms">
+			<mat-tab
+				*ngFor="let operator of operators; let i = index"
+				[label]="operator.type">
+				<mat-option
+					*ngFor="let operatorName of operator.values"
+					[value]="{operatorName, operator}">
+					{{ operatorName }}
+				</mat-option>
+			</mat-tab>
+		</mat-tab-group>
+	</mat-select>
 </mat-form-field>
 
 <mat-form-field appearance="fill">
-  <mat-label>Input</mat-label>
-  <input type="text" (change)="onInputChange($event, 'value_one')" matInput />
+	<mat-label>Input</mat-label>
+	<input type="text" (change)="onInputChange($event, 'value_one')" matInput />
 </mat-form-field>
 
 <!-- <ng-container *ngIf="currentOperator == 'in between'">

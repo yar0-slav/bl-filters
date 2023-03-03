@@ -1,29 +1,41 @@
 <ng-container *ngIf="events">
-    <mat-card-header>
-        <mat-card-title>Step {{stepIndex + 1 }}</mat-card-title>
-    </mat-card-header>
-    <mat-label>Select Event</mat-label>
-    <mat-form-field>
-        <mat-select [(value)]="selectedEvent" (selectionChange)="onEventChange($event)">
-            <mat-option *ngFor="let event of events" [value]="event.type">
-                {{ event.type }}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-    <ng-container *ngFor="let properties of step.properties, let i = index">
-        <div *ngIf="selectedEvent">
-            <mat-form-field>
-                <mat-label>Select Properties</mat-label>
-                <mat-select [(value)]="selectedProperties[i]" (selectionChange)="onPropertyChange($event, i)">
-                    <mat-option *ngFor="let property of arrayOfEventProperties" [value]="property">
-                        {{ property.property }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <app-operators [currentStepIndex]="i" [step]="step" (operatorChange)="onOperatorChange($event, i)
-                "></app-operators>
-            <button (click)="addNewAttribute()">Refine</button>
-        </div>
-    </ng-container>
-    <button (click)="stepDelete()">Delete Step</button>
+	<mat-card-header>
+		<mat-card-title>Step {{ stepIndex + 1 }}</mat-card-title>
+	</mat-card-header>
+
+	<mat-label>Select Event</mat-label>
+	<mat-form-field>
+		<mat-select
+			[value]="filterStep.event"
+			(selectionChange)="onEventChange($event)">
+			<mat-option *ngFor="let event of events" [value]="event.type">
+				{{ event.type }}
+			</mat-option>
+		</mat-select>
+	</mat-form-field>
+
+	<ng-container *ngFor="let propertyObject of filterStep.properties; let i = index">
+		<div >
+			<mat-form-field>
+				<mat-label>Select Properties</mat-label>
+				<mat-select
+					[value]="propertyObject.property"
+					(selectionChange)="onPropertyChange($event, i)">
+					<mat-option
+						*ngFor="let property of arrayOfEventProperties"
+						[value]="property">
+						{{ property.property }}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+			<app-operators
+				[currentStepIndex]="i"
+				[filterStep]="filterStep"
+				(operatorChange)="onOperatorChange($event, i)">
+            </app-operators>
+			<button (click)="addNewAttribute()">Refine</button>
+		</div>
+	</ng-container>
+	<button (click)="stepDelete()">Delete Step</button>
 </ng-container>
+<div *ngFor="let property of arrayOfEventProperties">{{ property.property }}</div>

@@ -21,12 +21,20 @@ export class CustomerFilterComponent implements OnInit {
     this.fetchData();
   }
 
-  onPropertyChange(data: any) {
-    const updatedProperty = data[0];
-    const indexOfProperty = data[1];
-    this.filter.filterSteps[this.stepIndex].properties[indexOfProperty] = updatedProperty[indexOfProperty]
-    // TODO: change from ANY
+  onStepChange(stepData: any, index: any) { // TODO: change from any 
+    console.log('parent stepData', stepData); 
+    this.filter.filterSteps[index] = {
+      ...this.filter.filterSteps[index],
+      ...stepData
+    };
+    console.log('filter after change', this.filter);
   }
+
+  // onPropertyChange(data: any) {
+  //   const updatedProperty = data[0];
+  //   const indexOfProperty = data[1];
+  //   this.filter.filterSteps[this.stepIndex].properties[indexOfProperty] = updatedProperty[indexOfProperty]
+  // }
 
   onEventNameChange(eventName: string) {
     this.filter.filterSteps.at(this.stepIndex)!.event = eventName;
