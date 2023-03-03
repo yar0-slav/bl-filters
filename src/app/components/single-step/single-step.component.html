@@ -15,7 +15,7 @@
 	</mat-form-field>
 
 	<ng-container *ngFor="let propertyObject of filterStep.properties; let i = index">
-		<div >
+		<div *ngIf="filterStep.event">
 			<mat-form-field>
 				<mat-label>Select Properties</mat-label>
 				<mat-select
@@ -36,7 +36,9 @@
 				(filterStepOutput)="onOperatorChange($event)">
             </app-operators>
 			<button (click)="addNewAttribute()">Refine</button>
+			<button *ngIf="filterStep.properties.length > 1	" (click)="removeCurrentAttribute(i)">Remove</button>
 		</div>
 	</ng-container>
+	<button *ngIf="filterStep.properties.length == 0" (click)="addNewAttribute()">Add Attribute</button>
 	<button (click)="stepDelete()">Delete Step</button>
 </ng-container>

@@ -31,8 +31,8 @@ export class SingleStepComponent {
 		let filterStepCopy = structuredClone(this.filterStep);
 
 		filterStepCopy = {
-			...filterStepCopy,
 			event: event.value,
+			properties: [new EventProperty()],
 		};
 
 		this.filterStepOutput.emit(filterStepCopy);
@@ -74,6 +74,9 @@ export class SingleStepComponent {
 			...this.filterStep.properties,
 			new EventProperty(),
 		];
+	}
+	removeCurrentAttribute(index: number) {
+		this.filterStep.properties.splice(index, 1)
 	}
 
 	stepDelete() {
