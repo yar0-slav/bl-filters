@@ -19,23 +19,24 @@
 			<mat-form-field>
 				<mat-label>Select Properties</mat-label>
 				<mat-select
-					[value]="propertyObject.property"
-					(selectionChange)="onPropertyChange($event, i)">
+					[value]="propertyObject"
+					(selectionChange)="onPropertyChange($event, i)"
+					[compareWith]="propertyObjectComparison">
 					<mat-option
-						*ngFor="let property of arrayOfEventProperties"
-						[value]="property">
-						{{ property.property }}
+						*ngFor="let properties of arrayOfEventProperties"
+						[value]="properties">
+						{{ properties.property }}
 					</mat-option>
 				</mat-select>
 			</mat-form-field>
 			<app-operators
 				[currentStepIndex]="i"
+				[properties]="propertyObject"
 				[filterStep]="filterStep"
-				(operatorChange)="onOperatorChange($event, i)">
+				(filterStepOutput)="onOperatorChange($event)">
             </app-operators>
 			<button (click)="addNewAttribute()">Refine</button>
 		</div>
 	</ng-container>
 	<button (click)="stepDelete()">Delete Step</button>
 </ng-container>
-<div *ngFor="let property of arrayOfEventProperties">{{ property.property }}</div>

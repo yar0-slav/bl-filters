@@ -8,37 +8,42 @@ import { EventOperator, FilterStep, Operator } from '../filter.model';
 	styleUrls: ['./operators.component.scss'],
 })
 export class OperatorsComponent {
-	@Input() currentStepIndex!: any; // TODO: change from any 
+	@Input() currentStepIndex!: number; 
+	@Input() properties!: any; 
+
 	@Input() filterStep!: FilterStep;
-	@Output() operatorChange = new EventEmitter<EventOperator[]>();
+	@Output() filterStepOutput = new EventEmitter<FilterStep>();
 
 	operator: EventOperator[] = [];
-	currentOperator: any; // TODO: change from any 
 
 	onOperatorChange(event: MatSelectChange) {
-		this.operator[this.currentStepIndex] = {
-			...this.operator[this.currentStepIndex],
-			name: event.value.operatorName,
+		let filterStepCopy = structuredClone(this.filterStep);
+
+		filterStepCopy.properties[this.currentStepIndex].operator = {
+			...filterStepCopy.properties[this.currentStepIndex].operator,
+			name: event.value.name,
 			type: event.value.operator.type,
-		};	
+		};
 
-		console.log(this.operator, this.currentStepIndex);
-
-		// console.log('current operator' ,this.currentOperator);
-		// this.currentOperator[this.currentStepIndex] = event.value;
-
-		this.operatorChange.emit(this.operator);
+		this.filterStepOutput.emit(filterStepCopy);
 	}
 
 	onInputChange(event: Event, propertyToUpdate: keyof Operator): void {
+		let filterStepCopy = structuredClone(this.filterStep);
+		
 		const inputValue: string = (event.target as HTMLInputElement).value;
-		this.operator[this.currentStepIndex] = {
-			...this.operator[this.currentStepIndex],
+		
+		filterStepCopy.properties[this.currentStepIndex].operator = {
+			...filterStepCopy.properties[this.currentStepIndex].operator,
 			[propertyToUpdate]: inputValue,
 		};
-		// this.operatorChange.emit(this.operator);
-		console.log(this.operator, this.currentStepIndex);
-		console.log('current index: ', this.operator[this.currentStepIndex]);
+		this.filterStepOutput.emit(filterStepCopy);
+	}
+
+	operatorObjectComparison(property_one: any, property_two: any) {
+		if (property_one.name == property_two.name) {
+		return property_one.name;
+		}
 	}
 
 	operators: { type: string; values: string[] }[] = [

@@ -21,23 +21,9 @@ export class CustomerFilterComponent implements OnInit {
     this.fetchData();
   }
 
-  onStepChange(stepData: any, index: any) { // TODO: change from any 
+  onStepChange(stepData: FilterStep, index: number) { 
     console.log('parent stepData', stepData); 
-    this.filter.filterSteps[index] = {
-      ...this.filter.filterSteps[index],
-      ...stepData
-    };
-    console.log('filter after change', this.filter);
-  }
-
-  // onPropertyChange(data: any) {
-  //   const updatedProperty = data[0];
-  //   const indexOfProperty = data[1];
-  //   this.filter.filterSteps[this.stepIndex].properties[indexOfProperty] = updatedProperty[indexOfProperty]
-  // }
-
-  onEventNameChange(eventName: string) {
-    this.filter.filterSteps.at(this.stepIndex)!.event = eventName;
+    this.filter.filterSteps[index] = stepData; 
   }
   
   addNewStep() {
@@ -48,9 +34,7 @@ export class CustomerFilterComponent implements OnInit {
   addNewAttribute() {
     const properties = this.filter.filterSteps.at(this.stepIndex)!.properties;
     properties.push(new EventProperty());
-    console.log(properties);
   }
-
 
   deleteStepAtIndex(index: number) {
     this.filter.filterSteps.splice(index, 1)
@@ -64,9 +48,14 @@ export class CustomerFilterComponent implements OnInit {
     this.stepIndex = event;
   }
 
+  trackByIndex(index: number) {
+    return index;
+  }
+
   fetchData(): void {
     this.filtersService.getData().subscribe(data => {
       this.events = data?.events || [];
     });
   }
+
 }

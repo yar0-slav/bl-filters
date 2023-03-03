@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import {
 	EventOperator,
@@ -14,74 +14,59 @@ import {
 })
 export class SingleStepComponent {
 	@Input() events: EventsResponseProps[] = [];
-	@Input() stepIndex!: number;
 
-	@Output() eventPropertiesOutput = new EventEmitter<[any, any]>(); // TODO: change from any 
-	@Output() eventNameOutput = new EventEmitter<string>();
-	@Output() stepIndexOutput = new EventEmitter<number>();
-	@Output() removeCurrentStep = new EventEmitter<any>(); // TODO: change from any
-	@Output() addEventAttribute = new EventEmitter<any>(); // TODO: change from any
+	@Input() stepIndex!: number;
 
 	@Input() filterStep!: FilterStep;
 	@Output() filterStepOutput = new EventEmitter<FilterStep>();
 
-	eventProperties: EventProperty[] = [new EventProperty()];
-	eventProps: FilterStep[] = [new FilterStep()];
+	@Output() removeCurrentStep = new EventEmitter<number>(); 
 
-	selectedEvent: string = '';
 	arrayOfEventProperties: EventProperty[] = [];
 	selectedProperties: { property: string; type: string }[] = [];
 
-	stepChange(data: any, propertyName: any) { // TODO: change from any 
+	onEventChange(event: MatSelectChange) {
+		this.getEventProperties(event.value);
+
 		let filterStepCopy = structuredClone(this.filterStep);
-		console.log('data ', data, 'prop name ', propertyName);
-		
+
 		filterStepCopy = {
 			...filterStepCopy,
-			[propertyName]: data,
+			event: event.value,
 		};
-		console.log('filterstepCopy', filterStepCopy);
+
 		this.filterStepOutput.emit(filterStepCopy);
 	}
 
-	onEventChange(event: MatSelectChange) {
-		this.stepIndexOutput.emit(this.stepIndex);
-		this.getEventProperties(event.value);
-		console.log('evnet props', this.arrayOfEventProperties);
-
-		this.stepChange(event.value, 'event');
-	}
-
 	onPropertyChange(event: MatSelectChange, index: number) {
-		this.stepIndexOutput.emit(this.stepIndex);
+		let filterStepCopy = structuredClone(this.filterStep);
 
-		// this.stepChange(event.value, 'properties')
+		filterStepCopy.properties[index] = {
+			...filterStepCopy.properties[index],
+			property: event.value.property,
+			type: event.value.type,
+		};
 
-		// const propertyValue = event.value.property;
-		// const typeValue = event.value.type;
-
-		// this.selectedProperties[index] = event.value;
-
-		// this.eventProperties[index] = {
-		// 	...this.eventProperties[index],
-		// 	property: propertyValue,
-		// 	type: typeValue,
-		// };
-
-		// this.eventPropertiesOutput.emit([this.eventProperties, index]);
+		this.filterStepOutput.emit(filterStepCopy);
 	}
 
-	onOperatorChange(operatorData: EventOperator[], index: number) {
-		// this.stepIndexOutput.emit(this.stepIndex);
+	onOperatorChange(operatorData: FilterStep) {
+		this.filterStepOutput.emit(operatorData);
+	}	
 
-		// this.eventProperties[index] = {
-		// 	...this.eventProperties[index],
-		// 	operator: operatorData[index],
-		// };
+	getEventProperties(value: string) {
+		const filterEventProperties = this.events.find(
+			(option: any) => option.type === value 
+		);
+		this.arrayOfEventProperties = structuredClone(
+			filterEventProperties?.properties ?? []
+		);
+	}
 
-		// console.log('event props', this.eventProperties);
-
-		// this.eventPropertiesOutput.emit([this.eventProperties, index]);
+	propertyObjectComparison(property_one: any, property_two: any) {
+		if (property_one.property == property_two.property) {
+			return property_one.property;
+		}
 	}
 
 	addNewAttribute() {
@@ -91,14 +76,7 @@ export class SingleStepComponent {
 		];
 	}
 
-	getEventProperties(value: string) {
-		const filterEventProperties = this.events.filter(
-			(option: any) => option.type === value // TODO: change from any 
-		);
-		this.arrayOfEventProperties = filterEventProperties[0].properties;
-	}
-
 	stepDelete() {
-		// this.removeCurrentStep.emit(this.stepIndex);
+		this.removeCurrentStep.emit(this.stepIndex);
 	}
 }
