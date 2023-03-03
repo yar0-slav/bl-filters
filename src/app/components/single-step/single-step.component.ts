@@ -37,7 +37,7 @@ export class SingleStepComponent implements OnInit {
 
 		this.CurrentEvent.getCurrentEventArray().subscribe(value => {
 			console.log('constructor getCurrentEventArray', value);
-			this.arrayOfEventProperties = value;
+			// this.arrayOfEventProperties = value;
 		});
 		console.log('--- constructor start ---');
 	}
@@ -47,7 +47,7 @@ export class SingleStepComponent implements OnInit {
 		this.CurrentEvent.getCurrentEventArray().subscribe(value => {
 			console.log('ngOnInit getCurrentEventArray', value);
 
-			this.arrayOfEventProperties = value;
+			// this.arrayOfEventProperties = value;
 		});
 
 		console.log('------ ngOnInit END ------');
